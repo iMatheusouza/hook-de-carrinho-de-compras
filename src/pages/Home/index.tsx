@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 import { ProductList } from './styles';
 import { api } from '../../services/api';
@@ -23,7 +24,7 @@ interface CartItemsAmount {
 
 const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
-  // const { addProduct, cart } = useCart();
+  const { addProduct, cart } = useCart();
 
   // const cartItemsAmount = cart.reduce((sumAmount, product) => {
   //   // TODO
@@ -34,7 +35,6 @@ const Home = (): JSX.Element => {
       await api
         .get('/products')
         .then((response) => {
-          console.log(response);
           const data = response.data;
           setProducts(data);
         })
@@ -45,7 +45,7 @@ const Home = (): JSX.Element => {
   }, []);
 
   function handleAddProduct(id: number) {
-    // TODO
+    addProduct(id);
   }
 
   return (
@@ -56,10 +56,11 @@ const Home = (): JSX.Element => {
             <img src={product.image} alt={product.title} />
             <strong>{product.title}</strong>
             <span>{formatPrice(product.price)}</span>
+            {product.id}
             <button
               type='button'
               data-testid='add-product-button'
-              // onClick={() => handleAddProduct(product.id)}
+              onClick={() => handleAddProduct(product.id)}
             >
               <div data-testid='cart-product-quantity'>
                 <MdAddShoppingCart size={16} color='#FFF' />

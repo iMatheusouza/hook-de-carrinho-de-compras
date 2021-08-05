@@ -34,9 +34,36 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
+      console.log(productId);
+      const response = await api.get(`products/${productId}`);
+      const newProduct = response.data;
+
+      if (cart.length === 0) {
+        newProduct.amount = 1;
+        setCart([...cart, newProduct]);
+      } else {
+        const cartUpdated = cart.map((product) => {
+          return newProduct.id === product.id
+            ? { ...product, amount: product.amount + 1 }
+            : { ...newProduct, amount: 1 };
+        });
+        console.log(cartUpdated);
+
+        setCart(cartUpdated);
+      }
+
+      //Usar o setcart para adicionar o produto que chegou pela api
+      //setCart();
+
+      //Caso o produto ja esteja no carrinho, apenas aumentar seu amount;
+
+      //Caso o produto esteja fora de estoque, usar um throw error
+      if (false) {
+        throw new Error();
+      }
     } catch {
-      // TODO
+      //O throw error bate aqui e podemos chamar o toast de produto fora de estoque
+      toast.error(`Produto fora de estoque`);
     }
   };
 
